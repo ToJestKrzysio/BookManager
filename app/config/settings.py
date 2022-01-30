@@ -16,9 +16,10 @@ env = environs.Env()
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DJANGO_DEBUG', 1)
+DEBUG = bool(env('DJANGO_DEBUG', 0))
 
 if DEBUG:
+    import os
     import socket
 
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
 
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -135,5 +137,9 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Crispy forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# User configuration
+AUTH_USER_MODEL = "users.CustomUser"
