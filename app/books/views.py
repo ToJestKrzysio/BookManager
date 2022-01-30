@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+from . import models
+
+
+class BookListView(generic.ListView):
+    queryset = models.Book.objects.select_related().all()
+    context_object_name = "books"

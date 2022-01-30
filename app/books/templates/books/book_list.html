@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Book list
+{% endblock title %}
+
+{% block content %}
+  <h2 class="mb-4">Book list</h2>
+  {% for book in books %}
+    <div class="card mb-3">
+      <div class="card-header pt-3">
+        <h3><a href="{{ book.address }}">{{ book.title }}</a></h3>
+      </div>
+      <div class="card-body">
+        <p><b>Author:</b>
+          {% for author in book.authors.all %}
+            {{ author.name }},
+          {% empty %}
+            Author missing
+          {% endfor %}
+        </p>
+        <p><b>Published:</b> {{ book.publication_year|date:"Y" }}</p>
+        <p><b>Number of pages:</b> {{ book.no_pages }}</p>
+        <p><b>Language:</b> {{ book.language.name }}</p>
+        <p><b>ISBN:</b> {{ book.ISBN }}</p>
+      </div>
+    </div>
+  {% empty %}
+    <h2>No books to display</h2>
+  {% endfor %}
+{% endblock content %}
