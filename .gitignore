@@ -127,3 +127,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# pycharm
+.idea
+
+
+# envs
+app/envs/*
+!app/envs/*-default
