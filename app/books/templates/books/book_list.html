@@ -5,9 +5,61 @@
 {% endblock title %}
 
 {% block content %}
-  <h2 class="mb-4">Book list</h2>
+
+  <div class="row">
+    <div class="col me-auto">
+      <h2>Book list</h2>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
+              data-bs-target="#collapseExample" aria-expanded="false"
+              aria-controls="collapseExample">
+        <i class="bi bi-filter"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="collapse" id="collapseExample">
+    <div class="card card-body mt-3">
+      <form action="?page=1&" method="get">
+        <div class="row">
+          <div class="col col-md-6 col-12 mb-3">
+            <input type="text" class="form-control" aria-label="title" name="title" id="title"
+                   aria-describedby="inputGroup-sizing-default" placeholder="Title">
+          </div>
+          <div class="col col-md-6 col-12 mb-3">
+            <input type="text" class="form-control" aria-label="author" name="author" id="author"
+                   aria-describedby="inputGroup-sizing-default" placeholder="Author">
+          </div>
+          <div class="col col-md-6 col-12 mb-3">
+            <input type="text" class="form-control" aria-label="language" name="language"
+                   id="language" aria-describedby="inputGroup-sizing-default"
+                   placeholder="Publication Language">
+          </div>
+          <div class="col col-md-6 col-12 mb-3">
+            <div class="input-group">
+              <input type="text" class="form-control" aria-label="pub_after"
+                     name="pub_after" id="pub_after" aria-describedby="inputGroup-sizing-default"
+                     placeholder="Published After">
+              <input type="text" class="form-control" aria-label="pub_before" name="pub_before"
+                     id="pub_before" aria-describedby="inputGroup-sizing-default"
+                     placeholder="Published Before">
+            </div>
+          </div>
+          <div>
+            <input type="text" name="page" id="page" aria-label="page" hidden
+                   value="{{ page_obj.number }}">
+          </div>
+        </div>
+        <div class="d-flex justify-content-end">
+          <input type="submit" class="btn btn-success" value="Filter">
+        </div>
+      </form>
+    </div>
+  </div>
+
   {% for book in books %}
-    <div class="card mb-3">
+    <div class="card mb-3 mt-3">
       <div class="card-header pt-3">
         <h3><a href="{{ book.address }}">{{ book.title }}</a></h3>
       </div>
@@ -28,4 +80,42 @@
   {% empty %}
     <h2>No books to display</h2>
   {% endfor %}
+
+  <div class="d-flex justify-content-center">
+    <ul class="pagination pagination-md">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href=?page=1>&laquo;</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href=?page={{ page_obj.previous_page_number }}>
+            {{ page_obj.previous_page_number }}
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href=?page={{ page_obj.number }}>&laquo;</a>
+        </li>
+      {% endif %}
+      <li class="page-item active">
+        <a class="page-link" href=?page={{ page_obj.number }}>{{ page_obj.number }}</a>
+      </li>
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href=?page={{ page_obj.next_page_number }}>
+            {{ page_obj.next_page_number }}
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}>&raquo;</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}>&raquo;</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+
 {% endblock content %}
