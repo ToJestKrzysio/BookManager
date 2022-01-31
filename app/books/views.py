@@ -4,7 +4,7 @@ from . import models
 
 
 class BookListView(generic.ListView):
-    queryset = models.Book.objects.select_related()
+    queryset = models.Book.objects
     context_object_name = "books"
     paginate_by = 1
     ordering = "title"
@@ -21,7 +21,7 @@ class BookListView(generic.ListView):
             filters["publication_year__year__gt"] = published_after
         if published_after := self.request.GET.get("pub_before", ""):
             filters["publication_year__year__lt"] = published_after
-        queryset = super().get_queryset().filter(**filters)
+        queryset = super().get_queryset().filter(**filters).all()
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -33,3 +33,9 @@ class BookListView(generic.ListView):
             filtering += f"&{field}={self.request.GET.get(field, '')}"
         context["filtering"] = filtering
         return context
+
+
+class CreateBookView(generic.CreateView):
+    model = models.Book
+    fields = "__all__"
+    template_name = "books/book_create.html"
