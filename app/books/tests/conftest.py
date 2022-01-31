@@ -28,6 +28,13 @@ def db_book_1(db_author_1, db_language_en, valid_isbn):
 
 
 @pytest.fixture
-def book_list_response(client, db_book_1):
+def book_list_response(client, db):
     url = reverse("books:book_list")
     return client.get(url)
+
+
+@pytest.fixture
+def posted_data(db_author_1, db_language_en, valid_isbn):
+    return {"authors": [1], "language": 1, "title": "Some Book",
+            "address": "www.TheExample.com", "no_pages": 42, "ISBN": valid_isbn,
+            "publication_year": 2010}
