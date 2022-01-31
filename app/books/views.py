@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.urls import reverse
 from django.views import generic
 
 from . import models
@@ -18,9 +20,9 @@ class BookListView(generic.ListView):
         if language := self.request.GET.get("language", ""):
             filters["language__name__icontains"] = language
         if published_after := self.request.GET.get("pub_after", ""):
-            filters["publication_year__year__gt"] = published_after
+            filters["publication_year__gt"] = published_after
         if published_after := self.request.GET.get("pub_before", ""):
-            filters["publication_year__year__lt"] = published_after
+            filters["publication_year__lt"] = published_after
         queryset = super().get_queryset().filter(**filters).all()
         return queryset
 
@@ -39,3 +41,8 @@ class CreateBookView(generic.CreateView):
     model = models.Book
     fields = "__all__"
     template_name = "books/book_create.html"
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"Book {self.request.POST['title']} added successfully.")
+        return reverse("books:book_list")

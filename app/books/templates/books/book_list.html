@@ -69,56 +69,63 @@
             Author missing
           {% endfor %}
         </p>
-        <p><b>Published:</b> {{ book.publication_year|date:"Y" }}</p>
+        <p><b>Published:</b> {{ book.publication_year }}</p>
         <p><b>Number of pages:</b> {{ book.no_pages }}</p>
         <p><b>Language:</b> {{ book.language.name }}</p>
         <p><b>ISBN:</b> {{ book.ISBN }}</p>
       </div>
     </div>
   {% empty %}
-    <h2 class="mb-3 mt-3">No books to display</h2>
+    <div class="d-flex justify-content-center">
+        <h2 class="my-5">Unfortunately there is no books to display</h2>
+    </div>
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'books:book_create' %}" class="btn btn-lg btn-info">Add new book</a>
+    </div>
   {% endfor %}
 
-  <div class="d-flex justify-content-center">
-    <ul class="pagination pagination-md">
-      {% if page_obj.has_previous %}
-        <li class="page-item">
-          <a class="page-link" href=?page=1{{ filtering }}>&laquo;</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href=?page={{ page_obj.previous_page_number }}{{ filtering }}>
-            {{ page_obj.previous_page_number }}
+  {% if books %}
+    <div class="d-flex justify-content-center">
+      <ul class="pagination pagination-md">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href=?page=1{{ filtering }}>&laquo;</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href=?page={{ page_obj.previous_page_number }}{{ filtering }}>
+              {{ page_obj.previous_page_number }}
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href=?page={{ page_obj.number }}{{ filtering }}>&laquo;</a>
+          </li>
+        {% endif %}
+        <li class="page-item active">
+          <a class="page-link" href=?page={{ page_obj.number }}{{ filtering }}>
+            {{ page_obj.number }}
           </a>
         </li>
-      {% else %}
-        <li class="page-item disabled">
-          <a class="page-link" href=?page={{ page_obj.number }}{{ filtering }}>&laquo;</a>
-        </li>
-      {% endif %}
-      <li class="page-item active">
-        <a class="page-link" href=?page={{ page_obj.number }}{{ filtering }}>
-          {{ page_obj.number }}
-        </a>
-      </li>
 
-      {% if page_obj.has_next %}
-        <li class="page-item">
-          <a class="page-link" href=?page={{ page_obj.next_page_number }}{{ filtering }}>
-            {{ page_obj.next_page_number }}
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}{{ filtering }}>
-            &raquo;
-          </a>
-        </li>
-      {% else %}
-        <li class="page-item disabled">
-          <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}{{ filtering }}>
-            &raquo;
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </div>
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href=?page={{ page_obj.next_page_number }}{{ filtering }}>
+              {{ page_obj.next_page_number }}
+            </a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}{{ filtering }}>
+              &raquo;
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}{{ filtering }}>
+              &raquo;
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  {% endif %}
 {% endblock content %}

@@ -18,11 +18,11 @@ class Language(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=300)
     authors = models.ManyToManyField(Author)
-    publication_year = models.DateField()
-    ISBN = models.IntegerField()
-    no_pages = models.IntegerField()
+    publication_year = models.PositiveSmallIntegerField()
+    ISBN = models.PositiveBigIntegerField()
+    no_pages = models.PositiveSmallIntegerField()
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
-    address = models.CharField(max_length=300)
+    address = models.URLField(max_length=300)
 
     def __str__(self):
         return f"{self.title}"
