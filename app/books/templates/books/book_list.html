@@ -65,7 +65,7 @@
       <div class="card-body">
         <p><b>Author:</b>
           {% for author in book.authors.all %}
-            {{ author.name }},
+            <a href="{% url 'books:author_update' author.pk %}">{{ author.name }}</a>,
           {% empty %}
             Author missing
           {% endfor %}

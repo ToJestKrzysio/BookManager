@@ -6,7 +6,7 @@ from books import models
 
 @pytest.fixture
 def db_author_1(db):
-    return models.Author.objects.create(name="Test Author")
+    return models.Author.objects.create(name="Test Author", id=1)
 
 
 @pytest.fixture

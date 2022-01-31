@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from . import models
@@ -53,11 +53,12 @@ class BookUpdateView(generic.UpdateView):
     model = models.Book
     fields = "__all__"
     template_name = "books/book_update.html"
+    extra_context = {"page_name": "Update Book"}
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
-                             f"Book {self.request.POST['title']} added successfully.")
-        return reverse("books:update_book", kwargs={"pk": self.object.pk})
+                             f"Book {self.request.POST['title']} updated successfully.")
+        return reverse_lazy("books:update_book", kwargs={"pk": self.object.pk})
 
 
 class AuthorCreateView(generic.CreateView):
@@ -65,4 +66,20 @@ class AuthorCreateView(generic.CreateView):
     fields = "__all__"
     template_name = "books/book_create.html"
     extra_context = {"page_name": "Add Author"}
-    success_url = "books:book_list"
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"Author {self.request.POST['name']} created successfully.")
+        return reverse_lazy("books:book_list")
+
+
+class AuthorUpdateView(generic.UpdateView):
+    model = models.Author
+    fields = "__all__"
+    template_name = "books/book_update.html"
+    extra_context = {"page_name": "Update Author"}
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"Author {self.request.POST['name']} updated successfully.")
+        return reverse_lazy("books:book_list")
