@@ -8,7 +8,7 @@ from . import models
 class BookListView(generic.ListView):
     queryset = models.Book.objects
     context_object_name = "books"
-    paginate_by = 1
+    paginate_by = 2
     ordering = "title"
 
     def get_queryset(self):
@@ -37,7 +37,7 @@ class BookListView(generic.ListView):
         return context
 
 
-class CreateBookView(generic.CreateView):
+class BookCreateView(generic.CreateView):
     model = models.Book
     fields = "__all__"
     template_name = "books/book_create.html"
@@ -46,3 +46,14 @@ class CreateBookView(generic.CreateView):
         messages.add_message(self.request, messages.SUCCESS,
                              f"Book {self.request.POST['title']} added successfully.")
         return reverse("books:book_list")
+
+
+class BookUpdateView(generic.UpdateView):
+    model = models.Book
+    fields = "__all__"
+    template_name = "books/book_update.html"
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"Book {self.request.POST['title']} added successfully.")
+        return reverse("books:update_book", kwargs={"pk": self.object.pk})

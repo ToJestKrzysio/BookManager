@@ -58,8 +58,9 @@
 
   {% for book in books %}
     <div class="card mb-3 mt-3">
-      <div class="card-header pt-3">
+      <div class="card-header pt-3 modal-header">
         <h3><a href="{{ book.address }}">{{ book.title }}</a></h3>
+        <a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-success">Edit</a>
       </div>
       <div class="card-body">
         <p><b>Author:</b>
