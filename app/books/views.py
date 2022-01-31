@@ -83,3 +83,27 @@ class AuthorUpdateView(generic.UpdateView):
         messages.add_message(self.request, messages.SUCCESS,
                              f"Author {self.request.POST['name']} updated successfully.")
         return reverse_lazy("books:book_list")
+
+
+class LanguageCreateView(generic.CreateView):
+    model = models.Language
+    fields = "__all__"
+    template_name = "books/book_create.html"
+    extra_context = {"page_name": "Add Language"}
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"Author {self.request.POST['name']} created successfully.")
+        return reverse_lazy("books:book_list")
+
+
+class LanguageUpdateView(generic.UpdateView):
+    model = models.Language
+    fields = "__all__"
+    template_name = "books/book_update.html"
+    extra_context = {"page_name": "Update Language"}
+
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"Author {self.request.POST['name']} updated successfully.")
+        return reverse_lazy("books:book_list")

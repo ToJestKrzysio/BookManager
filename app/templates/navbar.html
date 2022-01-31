@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">BookManager</a>
+    <a class="navbar-brand" href="{% url 'books:book_list' %}">BookManager</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false"
@@ -10,7 +10,23 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-link" href="{% url 'books:book_list' %}">Book list</a>
-        <a class="nav-link" href="{% url 'books:book_create' %}">Add book</a>
+        <a class="nav-link" href="{% url 'books:book_list' %}">Import Books</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Add
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" href="{% url 'books:book_create' %}">Book</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'books:author_create' %}">Author</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'books:language_create' %}">Language</a>
+            </li>
+          </ul>
+        </li>
       </div>
     </div>
   </div>

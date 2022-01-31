@@ -83,3 +83,40 @@ class TestAuthorUpdateView:
         template_names = [template.name for template in response.templates]
         assert "base.html" in template_names
         assert "books/book_update.html" in template_names
+
+
+class TestLanguageCreateView:
+
+    def setup(self):
+        self.url = reverse("books:language_create")
+
+    @pytest.mark.parametrize("url", ["/books/create/language/", reverse("books:language_create")])
+    def test_response_status_code(self, client, db, url):
+        response = client.get(url)
+        assert response.status_code == 200
+
+    def test_response_template(self, client, db):
+        response = client.get(self.url)
+        template_names = [template.name for template in response.templates]
+        assert "base.html" in template_names
+        assert "books/book_create.html" in template_names
+
+
+class TestLanguageUpdateView:
+
+    def setup(self):
+        self.url = reverse("books:language_update", kwargs={"pk": 42})
+
+    @pytest.mark.parametrize("url", [
+        "/books/update/language/42",
+        reverse("books:language_update", kwargs={"pk": 42})
+    ])
+    def test_response_status_code(self, client, db_book_1, url):
+        response = client.get(url)
+        assert response.status_code == 200
+
+    def test_response_template(self, client, db, db_book_1):
+        response = client.get(self.url)
+        template_names = [template.name for template in response.templates]
+        assert "base.html" in template_names
+        assert "books/book_update.html" in template_names

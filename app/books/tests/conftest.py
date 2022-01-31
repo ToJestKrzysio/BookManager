@@ -11,7 +11,7 @@ def db_author_1(db):
 
 @pytest.fixture
 def db_language_en(db):
-    return models.Language.objects.create(name="En")
+    return models.Language.objects.create(name="En", id=42)
 
 
 @pytest.fixture
