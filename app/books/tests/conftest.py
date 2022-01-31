@@ -20,10 +20,10 @@ def valid_isbn():
 
 
 @pytest.fixture
-def db_book_1(db_author_1, db_language_en, valid_isbn):
+def db_book_1(db, db_author_1, db_language_en, valid_isbn):
     return models.Book.objects.create(
         title="Test Book", publication_year=2000, ISBN=valid_isbn, no_pages=42,
-        language=db_language_en, address="www.example.com"
+        language=db_language_en, address="www.example.com", id=1
     )
 
 
