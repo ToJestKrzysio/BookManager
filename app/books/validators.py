@@ -12,7 +12,7 @@ def year_validator(value: int) -> int:
 
 def isbn_validator(value: int) -> int:
     if len(str(value)) != 13:
-        raise ValidationError("Invalid ISBN13 number, should be 13 digits.")
+        raise ValidationError("Wrong ISBN13 length, should be 13 digits.")
     digit_sum = 0
     for idx, digit in enumerate(str(value), start=1):
         multiplier = 3 if idx % 2 == 0 else 1
