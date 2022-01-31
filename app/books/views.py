@@ -41,6 +41,7 @@ class BookCreateView(generic.CreateView):
     model = models.Book
     fields = "__all__"
     template_name = "books/book_create.html"
+    extra_context = {"page_name": "Add Book"}
 
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
@@ -57,3 +58,11 @@ class BookUpdateView(generic.UpdateView):
         messages.add_message(self.request, messages.SUCCESS,
                              f"Book {self.request.POST['title']} added successfully.")
         return reverse("books:update_book", kwargs={"pk": self.object.pk})
+
+
+class AuthorCreateView(generic.CreateView):
+    model = models.Author
+    fields = "__all__"
+    template_name = "books/book_create.html"
+    extra_context = {"page_name": "Add Author"}
+    success_url = "books:book_list"

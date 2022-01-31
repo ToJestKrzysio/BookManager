@@ -2,15 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-  Add Book
+  {{ page_name }}
 {% endblock title %}
 
 {% block content %}
-  <h3 class="mb-3">Add book</h3>
+  <h3 class="mb-3">{{ page_name }}</h3>
     <form method="POST">
       {% csrf_token %}
       {{ form | crispy }}
-      <button type="submit" class="btn btn-success mt-3">Add Book</button>
+      <button type="submit" class="btn btn-success mt-3">{{ page_name }}</button>
     </form>
   </div>
 {% endblock content %}
