@@ -8,7 +8,7 @@ from . import models
 class BookListView(generic.ListView):
     queryset = models.Book.objects
     context_object_name = "books"
-    paginate_by = 2
+    paginate_by = 6
     ordering = "title"
 
     def get_queryset(self):

@@ -56,51 +56,44 @@
     </div>
   </div>
 
-
-
-  {% for book in books %}
-    <div class="card mb-3 mt-3">
-      <div class="card-header pt-3 modal-header">
-        <h3><a href="{{ book.address }}">{{ book.title }}</a></h3>
-        <a href="{% url 'books:book_update' book.pk %}"
-           class="btn btn-outline-success ms-auto me-2">Edit</a>
-        <a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-danger">Remove</a>
+  <div class="row">
+    {% for book in books %}
+      <div class="col-6 col-md-3 col-xl-2 mb-3 mt-3">
+        <div class="card">
+          <img src="{{ book.address }}" class="card-img-top p-2 bottom" alt="Book Cover"
+               style="height: 200px; object-fit: contain">
+          <div class="card-body text-center text-muted">
+            <h5 class="text-dark text-truncate">{{ book.title }}</h5>
+            <div class="row">
+              <div class="col text-end"><p>{{ book.publication_year }}</p></div>
+              <div class="col text-start"><p>{{ book.language.name|title }}</p></div>
+            </div>
+            <div>
+              <p>
+                {% for author in book.authors.all %}
+                  <a class="link-secondary" href="{% url 'books:author_update' author.pk %}">
+                    {{ author.name }}
+                  </a>
+                {% empty %}
+                  Author missing
+                {% endfor %}
+              </p>
+            </div>
+            <p>{{ book.no_pages }} pages</p>
+            <p>{{ book.ISBN }}</p>
+            <p><a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-success">
+              <i class="bi bi-pencil-square"></i> Edit
+            </a></p>
+            <p><a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-danger">
+              <i class="bi bi-trash"></i> Remove
+            </a></p>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <p><b>Author:</b>
-          {% for author in book.authors.all %}
-            <a href="{% url 'books:author_update' author.pk %}">{{ author.name }}</a>,
-          {% empty %}
-            Author missing
-          {% endfor %}
-        </p>
-        <p><b>Published:</b> {{ book.publication_year }}</p>
-        <p><b>Number of pages:</b> {{ book.no_pages }}</p>
-        <p><b>Language:</b> {{ book.language.name }}</p>
-        <p><b>ISBN:</b> {{ book.ISBN }}</p>
-      </div>
+    {% endfor %}
+  </div>
 
-    </div>
-{#    <div class="card mb-3 mt-3">#}
-{#      <img src="{{ book.address }}" class="rounded mx-auto d-block" alt="...">#}
-{#      <div class="card-body">#}
-{#        <h5 class="card-title">{{ book.title }}</h5>#}
-{#        <p class="card-text"></p>#}
-{#      </div>#}
-{#      <div class="card-footer">#}
-{#        <small class="text-muted">Last updated 3 mins ago</small>#}
-{#      </div>#}
-{#    </div>#}
-  {% empty %}
-    <div class="d-flex justify-content-center">
-      <h2 class="my-5">Unfortunately there is no books to display</h2>
-    </div>
-    <div class="d-flex justify-content-center">
-      <a href="{% url 'books:book_create' %}" class="btn btn-lg btn-info">Add new book</a>
-    </div>
-  {% endfor %}
-
-  {% if books %}
+  {% if is_paginated %}
     <div class="d-flex justify-content-center">
       <ul class="pagination pagination-md">
         {% if page_obj.has_previous %}
