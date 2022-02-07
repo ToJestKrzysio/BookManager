@@ -61,6 +61,11 @@ class BookUpdateView(generic.UpdateView):
         return reverse_lazy("books:update_book", kwargs={"pk": self.object.pk})
 
 
+class BookDeleteView(generic.DeleteView):
+    model = models.Book
+    success_url = reverse_lazy("books:book_list")
+
+
 class AuthorCreateView(generic.CreateView):
     model = models.Author
     fields = "__all__"
