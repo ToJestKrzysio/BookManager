@@ -12,4 +12,5 @@ urlpatterns = [
     path("update/author/<int:pk>", views.AuthorUpdateView.as_view(), name="author_update"),
     path("create/language/", views.LanguageCreateView.as_view(), name="language_create"),
     path("update/language/<int:pk>", views.LanguageUpdateView.as_view(), name="language_update"),
+    path("search/", views.BookSearchView.as_view(), name="book_search"),
 ]

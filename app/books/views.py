@@ -1,8 +1,11 @@
+import json
+import urllib.request
+
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
-from . import models
+from . import forms, helpers, models
 
 
 class BookListView(generic.ListView):
@@ -64,6 +67,45 @@ class BookUpdateView(generic.UpdateView):
 class BookDeleteView(generic.DeleteView):
     model = models.Book
     success_url = reverse_lazy("books:book_list")
+
+
+class BookSearchView(generic.FormView):
+    template_name = "books/book_update.html"
+    form_class = forms.SearchForm
+    extra_context = {"page_name": "Import"}
+    success_url = reverse_lazy("books:book_search")
+
+    def form_valid(self, form):
+        query = form.cleaned_data.get("query")
+        request_url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
+        response = urllib.request.urlopen(request_url)
+        books = json.load(response).get("items", None)
+        book_objects = []
+        for book in books:
+            volume_info = book.get("volumeInfo", {})
+            title = volume_info.get("title")
+            authors = volume_info.get("authors", [])
+            language = volume_info.get("language")
+            thumbnail = volume_info.get("imageLinks", {}).get("smallThumbnail", "")
+            page_count = volume_info.get("pageCount", 0)
+            published_date = volume_info.get("publishedDate", 0)
+            isbn_list = volume_info.get("industryIdentifiers", [])
+            isbn13 = helpers.get_isbn13(isbn_list)
+            language_object, _ = models.Language.objects.get_or_create(name=language)
+            book_object = models.Book.objects.create(
+                title=title,
+                language=language_object,
+                address=thumbnail,
+                no_pages=page_count,
+                ISBN=isbn13,
+                publication_year=published_date
+            )
+            for author in authors:
+                author_object, _ = models.Author.objects.get_or_create(name=author)
+                book_object.authors.add(author_object)
+            book_object.save()
+            book_objects.append(book_object)
+        return super().form_valid(form)
 
 
 class AuthorCreateView(generic.CreateView):
