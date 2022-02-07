@@ -11,7 +11,7 @@ from . import forms, helpers, models
 class BookListView(generic.ListView):
     queryset = models.Book.objects
     context_object_name = "books"
-    paginate_by = 6
+    paginate_by = 12
     ordering = "title"
 
     def get_queryset(self):
@@ -86,25 +86,27 @@ class BookSearchView(generic.FormView):
             title = volume_info.get("title")
             authors = volume_info.get("authors", [])
             language = volume_info.get("language")
-            thumbnail = volume_info.get("imageLinks", {}).get("smallThumbnail", "")
-            page_count = volume_info.get("pageCount", 0)
-            published_date = volume_info.get("publishedDate", 0)
+            thumbnail = volume_info.get("imageLinks", {}).get("smallThumbnail", None)
+            page_count = volume_info.get("pageCount", None)
+            published_date = volume_info.get("publishedDate", None)
+            published_date = published_date.split("-")[0] if published_date else None
             isbn_list = volume_info.get("industryIdentifiers", [])
-            isbn13 = helpers.get_isbn13(isbn_list)
+            isbn = helpers.get_isbn(isbn_list)
             language_object, _ = models.Language.objects.get_or_create(name=language)
-            book_object = models.Book.objects.create(
+            book_object, created = models.Book.objects.get_or_create(
                 title=title,
                 language=language_object,
-                address=thumbnail,
+                thumbnail=thumbnail,
                 no_pages=page_count,
-                ISBN=isbn13,
+                ISBN=isbn,
                 publication_year=published_date
             )
             for author in authors:
                 author_object, _ = models.Author.objects.get_or_create(name=author)
                 book_object.authors.add(author_object)
             book_object.save()
-            book_objects.append(book_object)
+            if created:
+                book_objects.append(book_object)
         return super().form_valid(form)
 
 

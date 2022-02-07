@@ -60,27 +60,30 @@
     {% for book in books %}
       <div class="col-6 col-md-3 col-xl-2 mb-3 mt-3">
         <div class="card">
-          <img src="{{ book.address }}" class="card-img-top p-2 bottom" alt="Book Cover"
+          <img src="{{ book.thumbnail }}" class="card-img-top p-2 bottom" alt="Book Cover"
                style="height: 200px; object-fit: contain">
           <div class="card-body text-center text-muted">
             <h5 class="text-dark text-truncate">{{ book.title }}</h5>
             <div class="row">
-              <div class="col text-end"><p>{{ book.publication_year }}</p></div>
-              <div class="col text-start"><p>{{ book.language.name|title }}</p></div>
+              <div class="col text-end"><p>{{ book.publication_year|default:"No data" }}</p></div>
+              <div class="col text-start"><p>{{ book.language.name|title|default:"No data" }}</p>
+              </div>
             </div>
-            <div>
-              <p>
-                {% for author in book.authors.all %}
-                  <a class="link-secondary" href="{% url 'books:author_update' author.pk %}">
-                    {{ author.name }}
+            <p class="text-truncate">
+              {% with book.authors.first as author %}
+                {% if author %}
+                  <a class="link-secondary"
+                     href="{% url 'books:author_update' author.pk %}">
+                    {{ author.name|truncatechars:15 }}
                   </a>
-                {% empty %}
+                {% else %}
                   Author missing
-                {% endfor %}
-              </p>
-            </div>
-            <p>{{ book.no_pages }} pages</p>
-            <p>{{ book.ISBN }}</p>
+                {% endif %}
+              {% endwith %}
+            </p>
+            <p>
+              {% if book.no_pages %}{{ book.no_pages }} pages{% else %}Pages missing{% endif %}</p>
+            <p>{{ book.ISBN|default:"ISBN missing" }}</p>
             <p><a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-success">
               <i class="bi bi-pencil-square"></i>Edit
             </a></p>

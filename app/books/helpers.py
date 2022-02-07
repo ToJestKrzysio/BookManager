@@ -1,6 +1,8 @@
-def get_isbn13(isbn_list: list[dict]) -> int:
-    for isbn in isbn_list:
-        isbn_13 = isbn.get("ISBN_13", None)
-        if isbn_13:
-            return isbn_13
-    return -1
+def get_isbn(isbn_list: list[dict]) -> str | None:
+    isbn = {}
+    for value in isbn_list:
+        type_ = value.get("type")
+        identifier = value.get("identifier")
+        if type_ and identifier:
+            isbn[type_] = identifier
+    return isbn.get("ISBN_13", None) or isbn.get("ISBN_10", None)
