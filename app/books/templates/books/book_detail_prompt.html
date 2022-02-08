@@ -1,0 +1,52 @@
+{% load static %}
+<div class="modal modal-centered fade" id="details_prompt_{{ book.id }}" tabindex="-1"
+     aria-labelledby="details_prompt_{{ book.id }}_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="details_prompt_{{ book.id }}_label">Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="
+            {% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'image_missing.jpg' %}{% endif %}"
+             class="card-img-top p-2 bottom" alt="Book Cover"
+             style="height: 400px; object-fit: contain">
+        <div class="card-body text-center text-muted">
+          <h5 class="text-dark">{{ book.title }}</h5>
+          <div class="row">
+            <div class="col text-end"><p>{{ book.publication_year|default:"No data" }}</p></div>
+            <div class="col text-start"><p>{{ book.language.name|title|default:"No data" }}</p>
+            </div>
+          </div>
+          <p class="text-truncate">
+            {% for author in book.authors.all %}
+              <p><a class="link-secondary" href="{% url 'books:author_update' author.pk %}">
+                {{ author.name }}
+              </a></p>
+            {% empty %}
+              Author missing
+            {% endfor %}
+          </p>
+          <p>
+            {% if book.no_pages %}{{ book.no_pages }} pages{% else %}Pages missing{% endif %}</p>
+          <p>{{ book.ISBN|default:"ISBN missing" }}</p>
+          <div class="row">
+            <div class="col">
+              <a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-success">
+                <i class="bi bi-pencil-square"></i> Edit
+              </a>
+            </div>
+            <div class="col">
+              <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                      data-bs-target="#delete_prompt_{{ book.id }}">
+                <i class="bi bi-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

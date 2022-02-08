@@ -1,0 +1,36 @@
+<div class="collapse" id="collapseExample">
+  <div class="card card-body mt-3">
+    <form action="" method="get">
+      <div class="row">
+        <div class="col col-md-6 col-12 mb-3">
+          <input type="text" class="form-control" aria-label="title" name="title" id="title"
+                 aria-describedby="inputGroup-sizing-default" placeholder="Title"
+                 value="{{ title }}">
+        </div>
+        <div class="col col-md-6 col-12 mb-3">
+          <input type="text" class="form-control" aria-label="author" name="author" id="author"
+                 aria-describedby="inputGroup-sizing-default" placeholder="Author"
+                 value="{{ author }}">
+        </div>
+        <div class="col col-md-6 col-12 mb-3">
+          <input type="text" class="form-control" aria-label="language" name="language"
+                 id="language" aria-describedby="inputGroup-sizing-default"
+                 placeholder="Publication Language" value="{{ language }}">
+        </div>
+        <div class="col col-md-6 col-12 mb-3">
+          <div class="input-group">
+            <input type="text" class="form-control" aria-label="pub_after"
+                   name="pub_after" id="pub_after" aria-describedby="inputGroup-sizing-default"
+                   placeholder="Published After" value="{{ pub_after }}">
+            <input type="text" class="form-control" aria-label="pub_before" name="pub_before"
+                   id="pub_before" aria-describedby="inputGroup-sizing-default"
+                   placeholder="Published Before" value="{{ pub_before }}">
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <input type="submit" class="btn btn-success" value="Filter">
+      </div>
+    </form>
+  </div>
+</div>

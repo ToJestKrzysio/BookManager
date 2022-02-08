@@ -11,7 +11,7 @@ from . import forms, helpers, models
 class BookListView(generic.ListView):
     queryset = models.Book.objects
     context_object_name = "books"
-    paginate_by = 12
+    paginate_by = 24
     ordering = "title"
 
     def get_queryset(self):
