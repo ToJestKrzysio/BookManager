@@ -2,6 +2,7 @@ import json
 import urllib.request
 
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
@@ -48,8 +49,7 @@ class BookCreateView(generic.CreateView):
     extra_context = {"page_name": "Add Book"}
 
     def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                             f"Book {self.request.POST['title']} added successfully.")
+        messages.success(self.request, f"Book {self.request.POST['title']} added successfully.")
         return reverse("books:book_list")
 
 
@@ -60,8 +60,7 @@ class BookUpdateView(generic.UpdateView):
     extra_context = {"page_name": "Update Book"}
 
     def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                             f"Book {self.request.POST['title']} updated successfully.")
+        messages.success(self.request, f"Book {self.request.POST['title']} updated successfully.")
         return reverse_lazy("books:book_list")
 
 
@@ -76,18 +75,25 @@ class BookSearchView(generic.FormView):
     extra_context = {"page_name": "Import"}
     success_url = reverse_lazy("books:book_search")
 
-    def form_valid(self, form):
-        query = form.cleaned_data.get("query")
-        request_url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
-        response = urllib.request.urlopen(request_url)
-        books_data = json.load(response).get("items", None)
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if not form.is_valid():
+            return self.form_invalid(form)
+
+        books_data = helpers.get_books_data(form)
+        if not books_data:
+            messages.error(request, 'No books matching selected query.')
+            return self.form_invalid(form)
         book_objects = []
         for book_data in books_data:
             book_object, created = helpers.create_book(book_data)
             if created:
                 book_objects.append(book_object)
-        messages.add_message(self.request, messages.SUCCESS,
-                             f"Successfully imported {len(book_objects)} books.")
+        if len(book_objects) > 0:
+            messages.success(self.request, f"Successfully imported {len(book_objects)} books.")
+        else:
+            messages.warning(self.request,
+                             f"All books matching query already exist in our database.")
         return super().form_valid(form)
 
 
@@ -98,8 +104,7 @@ class AuthorCreateView(generic.CreateView):
     extra_context = {"page_name": "Add Author"}
 
     def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                             f"Author {self.request.POST['name']} created successfully.")
+        messages.success(self.request, f"Author {self.request.POST['name']} created successfully.")
         return reverse_lazy("books:book_list")
 
 
@@ -134,6 +139,5 @@ class LanguageUpdateView(generic.UpdateView):
     extra_context = {"page_name": "Update Language"}
 
     def get_success_url(self):
-        messages.add_message(self.request, messages.SUCCESS,
-                             f"Author {self.request.POST['name']} updated successfully.")
+        messages.success(self.request, f"Author {self.request.POST['name']} updated successfully.")
         return reverse_lazy("books:book_list")

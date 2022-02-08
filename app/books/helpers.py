@@ -1,3 +1,6 @@
+import json
+import urllib.request
+
 from . import models
 
 
@@ -36,3 +39,24 @@ def create_book(book: dict):
         book_object.authors.add(author_object)
     book_object.save()
     return book_object, created
+
+
+def get_books_data(form):
+    query = form.cleaned_data.get("query")
+    searches = {}
+    if title := form.cleaned_data.get("title"):
+        searches["intitle"] = title
+    if author := form.cleaned_data.get("author"):
+        searches["inauthor"] = author
+    if publisher := form.cleaned_data.get("publisher"):
+        searches["inpublisher"] = publisher
+    if subject := form.cleaned_data.get("subject"):
+        searches["subject"] = subject
+    if isbn := form.cleaned_data.get("isbn"):
+        searches["isbn"] = isbn
+    api_query = "&".join(f"{key}:{value}" for key, value in searches.items())
+    if query:
+        api_query = f"{query}+{api_query}"
+    request_url = f"https://www.googleapis.com/books/v1/volumes?q={api_query}"
+    response = urllib.request.urlopen(request_url)
+    return json.load(response).get("items", None)

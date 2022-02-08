@@ -1,0 +1,22 @@
+{% load crispy_forms_tags %}
+</form>
+<div class="modal modal-centered fade" id="update_prompt_{{ book.id }}" tabindex="-1"
+     aria-labelledby="update_prompt_{{ book.id }}_label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="update_prompt_{{ book.id }}_label">Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3 class="mb-3">Update {{ book.title }}</h3>
+        <form method="POST">
+          {% csrf_token %}
+          {{ form | crispy }}
+          <button type="submit" class="btn btn-success mt-3">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
