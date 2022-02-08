@@ -1,7 +1,7 @@
 {% load static %}
 <div class="modal modal-centered fade" id="details_prompt_{{ book.id }}" tabindex="-1"
      aria-labelledby="details_prompt_{{ book.id }}_label" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="details_prompt_{{ book.id }}_label">Details</h5>
@@ -35,7 +35,7 @@
           <div class="row">
             <div class="col">
               <a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-success">
-                <i class="bi bi-pencil-square"></i> Edit
+                <i class="bi bi-pencil-square"></i> Update
               </a>
             </div>
             <div class="col">

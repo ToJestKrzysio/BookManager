@@ -17,7 +17,7 @@ class TestBook:
         assert "Please select a valid year." in str(exception.value)
 
     @pytest.mark.parametrize("isbn",
-                             [int("1" * len_) for len_ in range(1, 20) if len_ not in (10, 13)])
+                             [int("1" * len_) for len_ in range(1, 14) if len_ not in (10, 13)])
     def test_isbn_wrong_length(self, db_author_1, db_language_en, isbn):
         with pytest.raises(exceptions.ValidationError) as exception:
             book = models.Book.objects.create(

@@ -26,7 +26,8 @@ class BookListView(generic.ListView):
             filters["publication_year__gt"] = published_after
         if published_after := self.request.GET.get("pub_before", ""):
             filters["publication_year__lt"] = published_after
-        queryset = super().get_queryset().filter(**filters).all()
+        queryset = super().get_queryset().prefetch_related("authors", "language").filter(
+            **filters).all()
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -61,7 +62,7 @@ class BookUpdateView(generic.UpdateView):
     def get_success_url(self):
         messages.add_message(self.request, messages.SUCCESS,
                              f"Book {self.request.POST['title']} updated successfully.")
-        return reverse_lazy("books:update_book", kwargs={"pk": self.object.pk})
+        return reverse_lazy("books:book_list")
 
 
 class BookDeleteView(generic.DeleteView):
@@ -79,34 +80,14 @@ class BookSearchView(generic.FormView):
         query = form.cleaned_data.get("query")
         request_url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
         response = urllib.request.urlopen(request_url)
-        books = json.load(response).get("items", None)
+        books_data = json.load(response).get("items", None)
         book_objects = []
-        for book in books:
-            volume_info = book.get("volumeInfo", {})
-            title = volume_info.get("title")
-            authors = volume_info.get("authors", [])
-            language = volume_info.get("language")
-            thumbnail = volume_info.get("imageLinks", {}).get("smallThumbnail", None)
-            page_count = volume_info.get("pageCount", None)
-            published_date = volume_info.get("publishedDate", None)
-            published_date = published_date.split("-")[0] if published_date else None
-            isbn_list = volume_info.get("industryIdentifiers", [])
-            isbn = helpers.get_isbn(isbn_list)
-            language_object, _ = models.Language.objects.get_or_create(name=language)
-            book_object, created = models.Book.objects.get_or_create(
-                title=title,
-                language=language_object,
-                thumbnail=thumbnail,
-                no_pages=page_count,
-                ISBN=isbn,
-                publication_year=published_date
-            )
-            for author in authors:
-                author_object, _ = models.Author.objects.get_or_create(name=author)
-                book_object.authors.add(author_object)
-            book_object.save()
+        for book_data in books_data:
+            book_object, created = helpers.create_book(book_data)
             if created:
                 book_objects.append(book_object)
+        messages.add_message(self.request, messages.SUCCESS,
+                             f"Successfully imported {len(book_objects)} books.")
         return super().form_valid(form)
 
 

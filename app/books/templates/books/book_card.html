@@ -4,40 +4,14 @@
   <div class="card">
     <a href="#details_prompt_{{ book.id }}" data-bs-toggle="modal" class="link-dark"
        data-bs-target="#details_prompt_{{ book.id }}">
-      <img src="{{ book.thumbnail }}" class="card-img-top p-2 bottom" alt="Book Cover"
+      <img src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'image_missing.jpg' %}{% endif %}"
+           class="card-img-top p-2 bottom" alt="Book Cover"
            style="height:200px; object-fit: contain">
       <div class="card-body text-center text-muted">
         <h5 class="text-dark text-truncate">
           {{ book.title }}
         </h5>
+      </div>
     </a>
-    {#      <div class="row">#}
-    {#        <div class="col text-end"><p>{{ book.publication_year|default:"No data" }}</p></div>#}
-    {#        <div class="col text-start"><p>{{ book.language.name|title|default:"No data" }}</p>#}
-    {#        </div>#}
-    {#      </div>#}
-    {#      <p class="text-truncate">#}
-    {#        {% with book.authors.first as author %}#}
-    {#          {% if author %}#}
-    {#            <a class="link-secondary"#}
-    {#               href="{% url 'books:author_update' author.pk %}">#}
-    {#              {{ author.name|truncatechars:15 }}#}
-    {#            </a>#}
-    {#          {% else %}#}
-    {#            Author missing#}
-    {#          {% endif %}#}
-    {#        {% endwith %}#}
-    {#      </p>#}
-    {#      <p>#}
-    {#        {% if book.no_pages %}{{ book.no_pages }} pages{% else %}Pages missing{% endif %}</p>#}
-    {#      <p>{{ book.ISBN|default:"ISBN missing" }}</p>#}
-    {#      <p><a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-success">#}
-    {#        <i class="bi bi-pencil-square"></i> Edit#}
-    {#      </a></p>#}
-    {#      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"#}
-    {#              data-bs-target="#delete_prompt_{{ book.id }}">#}
-    {#        <i class="bi bi-trash"></i> Remove#}
-    </button>
   </div>
-</div>
 </div>
