@@ -1,0 +1,17 @@
+{% load static %}
+
+<div class="col-6 col-md-3 col-xl-2 mb-3 mt-3">
+  <div class="card">
+    <a href="#details_prompt_{{ book.id }}" data-bs-toggle="modal" class="link-dark"
+       data-bs-target="#details_prompt_{{ book.id }}">
+      <img src="{% if book.thumbnail %}{{ book.thumbnail }}{% else %}{% static 'image_missing.jpg' %}{% endif %}"
+           class="card-img-top p-2 bottom" alt="Book Cover"
+           style="height:200px; object-fit: contain">
+      <div class="card-body text-center text-muted">
+        <h5 class="text-dark text-truncate">
+          {{ book.title }}
+        </h5>
+      </div>
+    </a>
+  </div>
+</div>

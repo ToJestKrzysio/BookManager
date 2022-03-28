@@ -7,9 +7,7 @@
 {% block content %}
 
   <div class="row">
-    <div class="col me-auto">
-      <h2>Book list</h2>
-    </div>
+    <div class="col me-auto"><h2>Book list</h2></div>
     <div class="col d-flex justify-content-end">
       <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseExample" aria-expanded="false"
@@ -19,154 +17,14 @@
     </div>
   </div>
 
-  <div class="collapse" id="collapseExample">
-    <div class="card card-body mt-3">
-      <form action="" method="get">
-        <div class="row">
-          <div class="col col-md-6 col-12 mb-3">
-            <input type="text" class="form-control" aria-label="title" name="title" id="title"
-                   aria-describedby="inputGroup-sizing-default" placeholder="Title"
-                   value="{{ title }}">
-          </div>
-          <div class="col col-md-6 col-12 mb-3">
-            <input type="text" class="form-control" aria-label="author" name="author" id="author"
-                   aria-describedby="inputGroup-sizing-default" placeholder="Author"
-                   value="{{ author }}">
-          </div>
-          <div class="col col-md-6 col-12 mb-3">
-            <input type="text" class="form-control" aria-label="language" name="language"
-                   id="language" aria-describedby="inputGroup-sizing-default"
-                   placeholder="Publication Language" value="{{ language }}">
-          </div>
-          <div class="col col-md-6 col-12 mb-3">
-            <div class="input-group">
-              <input type="text" class="form-control" aria-label="pub_after"
-                     name="pub_after" id="pub_after" aria-describedby="inputGroup-sizing-default"
-                     placeholder="Published After" value="{{ pub_after }}">
-              <input type="text" class="form-control" aria-label="pub_before" name="pub_before"
-                     id="pub_before" aria-describedby="inputGroup-sizing-default"
-                     placeholder="Published Before" value="{{ pub_before }}">
-            </div>
-          </div>
-        </div>
-        <div class="d-flex justify-content-end">
-          <input type="submit" class="btn btn-success" value="Filter">
-        </div>
-      </form>
-    </div>
-  </div>
-
+  {% include 'books/book_filter.html' %}
   <div class="row">
     {% for book in books %}
-      <div class="col-6 col-md-3 col-xl-2 mb-3 mt-3">
-        <div class="card">
-          <img src="{{ book.address }}" class="card-img-top p-2 bottom" alt="Book Cover"
-               style="height: 200px; object-fit: contain">
-          <div class="card-body text-center text-muted">
-            <h5 class="text-dark text-truncate">{{ book.title }}</h5>
-            <div class="row">
-              <div class="col text-end"><p>{{ book.publication_year }}</p></div>
-              <div class="col text-start"><p>{{ book.language.name|title }}</p></div>
-            </div>
-            <div>
-              <p>
-                {% for author in book.authors.all %}
-                  <a class="link-secondary" href="{% url 'books:author_update' author.pk %}">
-                    {{ author.name }}
-                  </a>
-                {% empty %}
-                  Author missing
-                {% endfor %}
-              </p>
-            </div>
-            <p>{{ book.no_pages }} pages</p>
-            <p>{{ book.ISBN }}</p>
-            <p><a href="{% url 'books:book_update' book.pk %}" class="btn btn-outline-success">
-              <i class="bi bi-pencil-square"></i>Edit
-            </a></p>
-            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                    data-bs-target="#delete_prompt_{{ book.id }}">
-              <i class="bi bi-trash"></i>Remove
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal modal-centered fade" id="delete_prompt_{{ book.id }}"
-           data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1"
-           aria-labelledby="delete_prompt_{{ book.id }}_label" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="delete_prompt_{{ book.id }}_label">Are you sure?</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"
-                      aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p>You are about to delete <strong>{{ book.title }}</strong>.</p>
-
-            </div>
-            <div class="modal-footer">
-              <form action="{% url 'books:book_delete' book.pk %}" method="post">
-                {% csrf_token %}
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                  Close
-                </button>
-                <button type="submit" class="btn btn-danger">
-                  <i class="bi bi-trash"></i>Delete
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% include 'books/book_card.html' %}
+      {% include 'books/book_detail_prompt.html' %}
+      {% include 'books/book_delete_prompt.html' %}
     {% endfor %}
   </div>
 
-
-
-  {% if is_paginated %}
-    <div class="d-flex justify-content-center">
-      <ul class="pagination pagination-md">
-        {% if page_obj.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href=?page=1{{ filtering }}>&laquo;</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href=?page={{ page_obj.previous_page_number }}{{ filtering }}>
-              {{ page_obj.previous_page_number }}
-            </a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href=?page={{ page_obj.number }}{{ filtering }}>&laquo;</a>
-          </li>
-        {% endif %}
-        <li class="page-item active">
-          <a class="page-link" href=?page={{ page_obj.number }}{{ filtering }}>
-            {{ page_obj.number }}
-          </a>
-        </li>
-
-        {% if page_obj.has_next %}
-          <li class="page-item">
-            <a class="page-link" href=?page={{ page_obj.next_page_number }}{{ filtering }}>
-              {{ page_obj.next_page_number }}
-            </a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}{{ filtering }}>
-              &raquo;
-            </a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href=?page={{ page_obj.paginator.num_pages }}{{ filtering }}>
-              &raquo;
-            </a>
-          </li>
-        {% endif %}
-      </ul>
-    </div>
-  {% endif %}
+  {% include 'pagination.html' %}
 {% endblock content %}

@@ -23,7 +23,7 @@ def valid_isbn():
 def db_book_1(db, db_author_1, db_language_en, valid_isbn):
     return models.Book.objects.create(
         title="Test Book", publication_year=2000, ISBN=valid_isbn, no_pages=42,
-        language=db_language_en, address="www.example.com", id=1
+        language=db_language_en, thumbnail="www.example.com", id=1
     )
 
 
@@ -36,5 +36,5 @@ def book_list_response(client, db):
 @pytest.fixture
 def posted_data(db_author_1, db_language_en, valid_isbn):
     return {"authors": [1], "language": 1, "title": "Some Book",
-            "address": "www.TheExample.com", "no_pages": 42, "ISBN": valid_isbn,
+            "thumbnail": "www.TheExample.com", "no_pages": 42, "ISBN": valid_isbn,
             "publication_year": 2010}
