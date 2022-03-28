@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 djangorestframework = "==3.13.1"
 drf-yasg = "==1.20.0"
+django = "==4.0.3"
 
 [dev-packages]
 
