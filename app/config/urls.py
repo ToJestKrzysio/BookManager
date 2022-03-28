@@ -21,8 +21,9 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('books/', include('books.urls')),
-    path('__debug__/', include('debug_toolbar.urls')),
+    path('api/v1/', include('books_api.urls')),
 
+    path('__debug__/', include('debug_toolbar.urls')),
     path('api-auth/', include('rest_framework.urls')),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0),

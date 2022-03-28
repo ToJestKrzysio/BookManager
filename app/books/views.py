@@ -1,8 +1,4 @@
-import json
-import urllib.request
-
 from django.contrib import messages
-from django.core.exceptions import ValidationError
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 
