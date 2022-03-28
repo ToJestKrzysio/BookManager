@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from rest_framework import generics
+from . import serializers
+from books import models
 
-# Create your views here.
+
+class BookListAPIView(generics.ListAPIView):
+    serializer_class = serializers.BookSerializer
+    queryset = models.Book.objects.prefetch_related("authors", "language")
+
+
+class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = serializers.BookSerializer
+    queryset = models.Book.objects.prefetch_related("authors", "language")
