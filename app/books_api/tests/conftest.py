@@ -1,4 +1,6 @@
 import pytest
+from django.contrib.auth import get_user_model
+
 from books import models
 from books_api import serializers
 
@@ -31,8 +33,9 @@ def valid_isbn():
 @pytest.fixture
 def book_db(db, langauge_db, author_db, valid_isbn):
     book = models.Book.objects.create(
-        title="Test Book", publication_year=2000, ISBN=valid_isbn, no_pages=42,
-        language=langauge_db, thumbnail="www.example.com", id=1)
+        title="Test Book", publication_year=2000, ISBN=valid_isbn, no_pages=42, id=1,
+        language=langauge_db,
+        thumbnail="https://cdn.pixabay.com/photo/2022/01/17/19/59/dog-6945696_960_720.jpg")
     book.authors.add(author_db)
     book.save()
     return book
@@ -63,5 +66,12 @@ def book_serializer_return(langauge_db, author_db, book_db):
 
 
 @pytest.fixture
-def book_list_api_url():
-    return "/api/v1/books/"
+def user_1(db):
+    user_model = get_user_model()
+    return user_model.objects.create(username="someUser", email="test@mail.com")
+
+
+@pytest.fixture
+def admin_1(db):
+    user_model = get_user_model()
+    return user_model.objects.create_superuser(username="someAdmin", email="admin@mail.com")
